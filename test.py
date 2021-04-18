@@ -1,4 +1,4 @@
-from assignment import MultiLayerPerceptron
+from training import MultiLayerPerceptron
 
 
 def predict(model, dataset=None):
@@ -36,3 +36,5 @@ if __name__ == "__main__":
     outputs, labels = predict(model)
     print(f"predict: \n{outputs}")
     print(f"label: \n{labels}")
+    print(
+        f"accuracy: {sum([1 for x in zip(outputs, labels) if x[0] == x[1]])/len(model.dataset)}")
