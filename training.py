@@ -79,7 +79,20 @@ class MultiLayerPerceptron:
                 node['delta'] = errors[j] * \
                     self.activation_func_grad(node['output'])
 
-    def train(self, epochs, lr=0.5):
+    def update(self, train_set, lr):
+        """weight update 함수
+        """
+        for i in range(len(self.model)):
+            x_train = train_set[:-1]
+            if i != 0:
+                x_train = [node['output'] for node in self.model[i-1]]
+            for node in self.model[i]:
+                for j in range(len(x_train)):
+                    node['weights'][j] += lr * node['delta']*x_train[j]
+                node['weights'][-1] += lr * \
+                    node['delta']  # bias의 노드는 항상 1임
+
+    def train(self, epochs, lr=0.5, verbose=False):
         """주어진 dataset을 가지고 학습합니다.
         """
         for epoch in range(epochs):
@@ -90,7 +103,7 @@ class MultiLayerPerceptron:
 
                 # one hot vector로 구성
                 label = [0 for _ in range(
-                    len(set([row[-1] for row in dataset])))]
+                    len(set([row[-1] for row in self.dataset])))]
                 label[train_set[-1]] = 1
 
                 # 표기할 오차
@@ -101,16 +114,9 @@ class MultiLayerPerceptron:
                 self.backward(label)
 
                 # update
-                for i in range(len(self.model)):
-                    x_train = train_set[:-1]
-                    if i != 0:
-                        x_train = [node['output'] for node in self.model[i-1]]
-                    for node in self.model[i]:
-                        for j in range(len(x_train)):
-                            node['weights'][j] += lr * node['delta']*x_train[j]
-                        node['weights'][-1] += lr * \
-                            node['delta']  # bias의 노드는 항상 1임
-            if epoch % 100 == 0:
+                self.update(train_set, lr)
+
+            if verbose and epoch % 100 == 0:
                 print(f"epoch: {epoch}, error: {error:.3f}")
 
 
