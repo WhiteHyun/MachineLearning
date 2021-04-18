@@ -45,11 +45,16 @@ class tensor(list):
         result = tensor()
         col = list(zip(*b))
         idx = 0
-        for i in a:
-            result.append(tensor())
+        # 행렬의 크기가 1xn일 때
+        if len(a.shape()) == 1:
             for j in col:
-                result[idx].append(sum(x*y for x, y in zip(i, j)))
-            idx += 1
+                result.append(sum(x*y for x, y in zip(a, j)))
+        else:
+            for i in a:
+                result.append(tensor())
+                for j in col:
+                    result[idx].append(sum(x*y for x, y in zip(i, j)))
+                idx += 1
         return result
 
     def __add(self, a, b):
@@ -79,13 +84,14 @@ class tensor(list):
         result = tensor()
         idx = 0
         # 같은 크기의 행렬합인 경우
-        if a.shape() == b.shape():
-            # bias일 때 (1차원 행렬일 때)
-            if type(a[0]) is not tensor or type(b[0]) is not tensor:
+        a_shape = a.shape()
+        b_shape = b.shape()
+        if a_shape == b_shape:
+            # 1xn 행렬일 때
+            if len(a_shape) == 1:
                 for x, y in zip(a, b):
                     result.append(x+y)
-
-            # 일반 행렬일 때
+            # nxm 행렬일 때
             else:
                 for x, y in zip(a, b):
                     result.append(tensor())
@@ -93,7 +99,7 @@ class tensor(list):
                         result[idx].append(i + j)
                     idx += 1
         # 행렬과 bias 합인 경우
-        elif a[0].shape() == b.shape():
+        elif a_shape[1] == b_shape:
             for row in a:
                 result.append(tensor())
                 result[idx] = tensor(map(lambda x, y: x + y, row, b))
@@ -101,22 +107,35 @@ class tensor(list):
         return result
 
     def __rtruediv__(self, x):
-        if type(x) is tensor:
-            pass
+        assert type(x) is not tensor
         result = tensor()
         idx = 0
-        for i in self:
-            result.append(tensor())
-            for value in i:
-                result[idx].append(x/value)
-            idx += 1
+        # 1xn 행렬일 때
+        if len(self.shape()) == 1:
+            for value in self:
+                result.append(x/value)
+        # nxm 행렬일 때
+        else:
+            for row in self:
+                result.append(tensor())
+                for value in row:
+                    result[idx].append(x/value)
+                idx += 1
 
         return result
 
     def __mul__(self, x):
         if type(x) is int:
             return super().__mul__(x)
-        return self.__dot(self, x)
+        # 행렬곱
+        elif self.shape() != x.shape():
+            return self.__dot(self, x)
+        # 같은 크기인 경우 각각 요소별 곱
+        else:
+            result = tensor()
+            for val1, val2 in zip(self, x):
+                result.append(val1*val2)
+            return result
 
     def __rmul__(self, x):
         if type(x) is int:
@@ -143,11 +162,15 @@ class tensor(list):
         # x가 정수일 때
         result = tensor()
         idx = 0
-        for row in self:
-            result.append(tensor())
-            for value in row:
-                result[idx].append(value + x)
-            idx += 1
+        if len(self.shape()) == 1:
+            for value in self:
+                result.append(value + x)
+        else:
+            for row in self:
+                result.append(tensor())
+                for value in row:
+                    result[idx].append(value + x)
+                idx += 1
         return result
 
     def __radd__(self, x):
@@ -176,12 +199,42 @@ class tensor(list):
         else:
             result = tensor()
             idx = 0
-            for mtrx in self:
-                result.append(tensor())
-                for i in mtrx:
-                    result[idx].append(x-i)
-                idx += 1
+            # 1xn 행렬일 때
+            if len(self.shape()) == 1:
+                for value in self:
+                    result.append(x-value)
+            else:
+                for mtrx in self:
+                    result.append(tensor())
+                    for i in mtrx:
+                        result[idx].append(x-i)
+                    idx += 1
             return result
+
+    def __neg__(self):
+        result = tensor()
+        if len(self.shape()) == 1:
+            for x in self:
+                result.append(-x)
+        else:
+            idx = 0
+            for x in self:
+                result.append(tensor())
+                for value in x:
+                    result[idx].append(-value)
+                idx += 1
+        return result
+
+    def __str__(self) -> str:
+        if len(self.shape()) == 1:
+            return super().__str__()
+        result = "["
+        for i in range(len(self)):
+            if i == len(self)-1:
+                result += f"{self[i]}]"
+            else:
+                result += f"{self[i]},\n "
+        return result
 
     def __pow__(self, x):
         """행렬 거듭제곱
@@ -203,7 +256,10 @@ class tensor(list):
     def T(self):
         """전치행렬
         """
-        return tensor(tensor(e) for e in zip(*self))
+        if len(self.shape()) == 1:
+            return self.copy()
+        else:
+            return tensor(tensor(e) for e in zip(*self))
 
     def shape(self):
         """행렬의 크기
@@ -264,10 +320,26 @@ class MultiLayerPerceptron:
         return 0.5 * sum((predicted-label)**2)
 
     def sigmoid(self, x):
-        return 1/(1+tensor(map(lambda args: tensor(math.exp(v) for v in args), x)))
+        if len(x.shape()) == 1:
+            e = tensor(map(lambda args: math.exp(args), -x))
+        else:
+            e = tensor(map(lambda args: tensor(math.exp(v) for v in args), -x))
+        return 1/(1+e)
 
-    def sigmoid_grad(self, x):
-        return self.sigmoid(x)*(1.0 - self.sigmoid(x))
+    def sigmoid_grad(self, output):
+        """sigmoid grad라 써놓고 다르게 사용한다! ㅎㅎ;;
+
+        sigmoid'(A^[l]) = sigmoid(A^[l])*(1-sigmoid(A^[l]))
+                        = Z^[l]*(1-Z^[l])
+        이기 때문에 output에 올바른 값을 넣도록 하자!
+
+        Example
+        -------
+
+        a2에 대한 sigmoid 미분값을 구하기 위해서는 output에 y값을 주어야 한다.
+
+        """
+        return output*(1.0 - output)
 
     def gradient(self, input_data, label):
         """
@@ -281,21 +353,34 @@ class MultiLayerPerceptron:
 
         # forward
         a1 = input_data*w1 + b1
-        z1 = self.sigmoid(a1)
+        z1 = self.sigmoid(a1)  # output
         a2 = z1*w2 + b2
-        y = self.sigmoid(a2)
+        y = self.sigmoid(a2)  # output
 
         # backward
         dy = y - label  # MSE로 계산한 오차
-        # grads['w2'] = dy*y*(1-y)*z1.T()
-        grads['w2'] = z1.T()*dy
-        grads['b2'] = sum(dy)
 
-        da1 = dy*w2.T()
-        dz1 = self.sigmoid_grad(a1)*da1
-        grads['w1'] = input_data.T()*dz1
-        grads['b1'] = sum(dz1)
-        print(grads['b1'], grads['b2'])
+        # hidden-output 층 간 기울기 계산
+        grad_w2_weights = tensor()
+        idx = 0
+        for i in z1:
+            grad_w2_weights.append(tensor())
+            for j, dl in zip(self.sigmoid_grad(y), dy):
+                grad_w2_weights[idx].append(dl*j*i)
+            idx += 1
+        grads_b2_weights = tensor()
+        for j, dl in zip(self.sigmoid_grad(y), dy):
+            grads_b2_weights.append(dl*j)
+        # hidden-output 층 간 기울기 계산 끝
+
+        grads['w2'] = grad_w2_weights
+        grads['b2'] = grads_b2_weights
+
+        # da1 = dy*w2.T()
+        # dz1 = self.sigmoid_grad(a1)*da1
+        # grads['w1'] = input_data.T()*dz1
+        # grads['b1'] = sum(dz1)
+        # print(grads['b1'], grads['b2'])
         return grads
 
 
@@ -314,8 +399,8 @@ if __name__ == "__main__":
     for i in range(300):
         if i % 300 == 0:
             print(i, end="..")
-
-        grad = perceptron.gradient(x_train, y_train)
+        rand = random.randint(0, len(x_train))
+        grad = perceptron.gradient(x_train[rand], y_train[rand])
 
         for key in ('w1', 'b1', 'w2', 'b2'):
             perceptron.weight[key] -= 0.1 * grad[key]   # lr = 0.1
