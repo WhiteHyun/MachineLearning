@@ -3,7 +3,7 @@ import math
 
 
 def randn(size):
-    """가우시안 표준 정규 분포에서 난수 생성
+    """난수 생성
     """
     return [random.random() for _ in range(size+1)]
 
