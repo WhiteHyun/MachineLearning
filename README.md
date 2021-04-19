@@ -1,2 +1,3 @@
 # MachineLearning
-기계학습 끄적끄적
+
+- [중간 대체과제](./assignment1/README.md)

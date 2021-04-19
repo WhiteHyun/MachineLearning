@@ -45,12 +45,13 @@ class MultiLayerPerceptron:
         """순전파 수행
         """
         inputs = data
-        # 각각의 layer들을 지남
+        # 각각의 layer를 지남
         for layer in self.model:
             outputs = []
             # layer들 중 노드들을 통해 가중치 계산
             for node in layer:
                 zsum_or_osum = self.weight_sum(node['weights'], inputs)
+                # 각 가중치 합을 계산하여 활성함수를 적용한 output을 해당 layer-node에 output을 key값으로 하여 적용
                 node['output'] = self.activation_func(zsum_or_osum)
                 outputs.append(node['output'])
             inputs = outputs
@@ -60,20 +61,21 @@ class MultiLayerPerceptron:
         """역전파 알고리즘입니다.
         스토캐스틱 경사하강법(SGD)을 채택하였습니다.
         """
-        # 출력층 -> 입력층 순
+        # 출력 레이어(층) -> 입력 레이어(층) 순서로 역전파 진행
         for i in reversed(range(len(self.model))):
             layer = self.model[i]
-            errors = []
-            if i != len(self.model)-1:  # 출력층이 아닌 경우
+            errors = []  # 계산할 에러
+
+            if i == len(self.model)-1:  # 출력층인 경우
+                for j in range(len(layer)):
+                    node = layer[j]
+                    errors.append(label[j] - node['output'])
+            else:
                 for j in range(len(layer)):
                     error = 0.0
                     for node in self.model[i+1]:  # 다음 레이어에 대해
                         error += (node['weights'][j]*node['delta'])
                     errors.append(error)
-            else:
-                for j in range(len(layer)):
-                    node = layer[j]
-                    errors.append(label[j] - node['output'])
             for j in range(len(layer)):
                 node = layer[j]
                 node['delta'] = errors[j] * \
@@ -83,12 +85,12 @@ class MultiLayerPerceptron:
         """weight update 함수
         """
         for i in range(len(self.model)):
-            x_train = train_set[:-1]
-            if i != 0:
-                x_train = [node['output'] for node in self.model[i-1]]
+            inputs = train_set[:-1] if i != 0 else [node['output']
+                                                    for node in self.model[i-1]]
             for node in self.model[i]:
-                for j in range(len(x_train)):
-                    node['weights'][j] += lr * node['delta']*x_train[j]
+                for j in range(len(inputs)):
+                    node['weights'][j] += lr * node['delta'] * \
+                        inputs[j]  # 역전파 할 때 곱해야할 노드값까지 계산
                 node['weights'][-1] += lr * \
                     node['delta']  # bias의 노드는 항상 1임
 
