@@ -38,10 +38,10 @@ class MultiLayerPerceptron:
         # return 1.0/(1.0+math.exp(-x))  # sigmoid
 
     def activation_func_grad(self, x):
-        """활성함수 도함수 값입니다.
+        """활성함수 미분계수 값입니다.
         """
-        return 1 if x > 0 else 0  # ReLU 도함수
-        # return x*(1.0-x)  # sigmoid 도함수
+        return 1 if x > 0 else 0  # ReLU
+        # return x*(1.0-x)  # sigmoid
 
     def feed_foward(self, data):
         """순전파 수행
