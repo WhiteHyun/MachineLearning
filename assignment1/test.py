@@ -2,7 +2,14 @@ from training import MultiLayerPerceptron
 
 
 def predict(model, dataset=None):
-    """예측 값을 보여줍니다.
+    """model의 dataset을 가지고 계산하여 예측값과 정답값을 리턴합니다.
+
+
+    Example
+    -------
+
+    >>> predict(model)
+    ([[1, 0], [1, 0], ..., [0, 1]], [[1, 0], [1, 0], ..., [0, 1]])
     """
     if dataset is not None:
         model.dataset = dataset
@@ -31,9 +38,18 @@ if __name__ == "__main__":
                [2.5026163932400305, 5.800780055043912, 1],
                [5.032436157202415, 8.650625621472184, 1],
                [4.095084253434162, 7.69104329159447, 1]]
-    model = MultiLayerPerceptron(2, 2, 2, dataset)
-    model.train(5000)
+
+    len_input_nodes = len(dataset[0])-1
+    len_hidden_nodes = 2
+    len_output_nodes = len(set(map(lambda x: x[-1], dataset)))
+
+    model = MultiLayerPerceptron(
+        len_input_nodes, len_hidden_nodes, len_output_nodes, dataset)
+
+    model.train(epochs=5000, verbose=False)  # epochs: 5000, 출력: False
+
     outputs, labels = predict(model)
+
     print(f"predict: \n{outputs}")
     print(f"label: \n{labels}")
     print(

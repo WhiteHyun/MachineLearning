@@ -36,14 +36,14 @@ class MultiLayerPerceptron:
     def activation_func(self, x):
         """활성함수입니다.
         """
-        return max(0, x)    # ReLU
-        # return 1.0/(1.0+math.exp(-x))  # sigmoid
+        # return max(0, x)    # ReLU
+        return 1.0/(1.0+math.exp(-x))  # sigmoid
 
     def activation_func_grad(self, x):
         """활성함수 미분계수 값입니다.
         """
-        return 1 if x > 0 else 0  # ReLU
-        # return x*(1.0-x)  # sigmoid
+        # return 1 if x > 0 else 0  # ReLU
+        return x*(1.0-x)  # sigmoid
 
     def feed_foward(self, data):
         """순전파 수행
@@ -144,5 +144,9 @@ if __name__ == "__main__":
                [5.032436157202415, 8.650625621472184, 1],
                [4.095084253434162, 7.69104329159447, 1]]
 
-    network = MultiLayerPerceptron(2, 2, 2, dataset)
-    network.train(5000, verbose=True)
+    len_input_nodes = len(dataset[0])-1
+    len_hidden_nodes = 2
+    len_output_nodes = len(set(map(lambda x: x[-1], dataset)))
+    network = MultiLayerPerceptron(
+        len_input_nodes, len_hidden_nodes, len_output_nodes, dataset)
+    network.train(epochs=5000, verbose=True)

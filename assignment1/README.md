@@ -330,4 +330,4 @@ class MultiLayerPerceptron:
 - `zsum`이나 `osum`의 값이 0 이하가 되는 경우 활성함수를 적용하게 되면 무조건 0이 나오게 되고 그 외에는 자신의 값이 나오게 된다. ReLU를 미분할 시 `0: (x<0)`, `1: (x>1)`로 단순화된다.
 - 이 때 **x가 0이 되게 되는 경우** 기울기는 `0`이 되기 때문에 **역전파를 진행할 시 가중치가 조정되지 않기 때문에** 각 노드는 그 가중치대로 머물게 된다. 이는 `dying ReLU`라고 불리우며 이를 해결하기위해 `Leaky ReLU` 또는 `Parametric ReLU`를 사용한다.
 
-  - <img width="984" alt="image" src="https://user-images.githubusercontent.com/57972338/115390991-e385a200-a219-11eb-85bf-9b870291e60d.png">
+   <img width="400" alt="image" src="https://user-images.githubusercontent.com/57972338/115390991-e385a200-a219-11eb-85bf-9b870291e60d.png">
