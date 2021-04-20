@@ -32,7 +32,7 @@ if __name__ == "__main__":
                [5.032436157202415, 8.650625621472184, 1],
                [4.095084253434162, 7.69104329159447, 1]]
     model = MultiLayerPerceptron(2, 2, 2, dataset)
-    model.train(2000)
+    model.train(5000)
     outputs, labels = predict(model)
     print(f"predict: \n{outputs}")
     print(f"label: \n{labels}")

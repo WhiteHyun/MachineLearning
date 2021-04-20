@@ -310,4 +310,24 @@ class MultiLayerPerceptron:
 
 ## 결론
 
-<!-- TODO: 작성해야함 -->
+1. 데이터셋을 가지고 한 `Epoch`를 500번 정도 학습시키고 난 결과, 에러율이 눈에 띄게 사라지는 것을 볼 수 있다.
+   <img width="249" alt="image" src="https://user-images.githubusercontent.com/57972338/115369190-d3ae9380-a202-11eb-829a-445703ae10f1.png">
+
+2. 학습시킨 가중치를 가지고 테스트를 해보았을 때 높은 정확도를 보였다.
+   <img width="694" alt="image" src="https://user-images.githubusercontent.com/57972338/115369552-32740d00-a203-11eb-907d-b2d2fb2d3d25.png">
+
+- 위 결과값은 활성함수로 `sigmoid`를 사용했다.  
+  활성함수를 `ReLU`로 바꿔 실험을 하면 다음과 같은 결과값이 나온다.
+  <img width="229" alt="image" src="https://user-images.githubusercontent.com/57972338/115378985-11fc8080-a20c-11eb-9f86-dd2d4b0ef326.png">
+
+  <img width="690" alt="image" src="https://user-images.githubusercontent.com/57972338/115379030-1aed5200-a20c-11eb-8092-1c8e322067e8.png">
+
+### ReLU를 사용하면 에러율이 높아지는 이유
+
+- ReLU의 그래프는 다음과 같다.
+  <img width="236" alt="image" src="https://user-images.githubusercontent.com/57972338/115386111-f4cbb000-a213-11eb-892a-bf29157dc8ee.png">
+
+- `zsum`이나 `osum`의 값이 0 이하가 되는 경우 활성함수를 적용하게 되면 무조건 0이 나오게 되고 그 외에는 자신의 값이 나오게 된다. ReLU를 미분할 시 `0: (x<0)`, `1: (x>1)`로 단순화된다.
+- 이 때 **x가 0이 되게 되는 경우** 기울기는 `0`이 되기 때문에 **역전파를 진행할 시 가중치가 조정되지 않기 때문에** 각 노드는 그 가중치대로 머물게 된다. 이는 `dying ReLU`라고 불리우며 이를 해결하기위해 `Leaky ReLU` 또는 `Parametric ReLU`를 사용한다.
+
+  - <img width="984" alt="image" src="https://user-images.githubusercontent.com/57972338/115390991-e385a200-a219-11eb-85bf-9b870291e60d.png">
