@@ -1,6 +1,8 @@
 import random
 import math
 
+random.seed(1)
+
 
 def randn(size):
     """난수 생성
@@ -131,7 +133,6 @@ class MultiLayerPerceptron:
 
 
 if __name__ == "__main__":
-    random.seed(1)
     dataset = [[3.5064385449265267, 2.34547092892632525, 0],
                [4.384621956392097, 3.4530853889904205, 0],
                [4.841442919897487, 4.02507852317520154, 0],
