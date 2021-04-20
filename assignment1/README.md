@@ -213,10 +213,40 @@ class MultiLayerPerceptron:
   ```
 
   - 각 노드들은 자신의 `output`을 가지고 있기 때문에 인자를 받지 않고 label만 인자로 받음
-  - 출력층인 경우
-    https://github.com/WhiteHyun/MachineLearning/blob/e48b966ee35cc71a61d42cd9b3ca68a87cb06aed/assignment1/training.py#L71-L74
+  - 출력층인 경우 해당 코드는
+
+    ```python
+    for j in range(len(layer)):
+      node = layer[j]
+      errors.append(label[j] - node['output'])
+    ```
+
     <img width="306" alt="image" src="https://user-images.githubusercontent.com/57972338/115361398-83800300-a1fb-11eb-9b53-37720cd8f147.png">
-    `label[j] - node['output']`은 `-(y-o)`에 해당한다.
+
+    - 각 노드의 `-(y-o)`에 해당한다.
+
+  - 그 외 레이어의 경우
+
+    ```python
+    for j in range(len(layer)):
+      error = 0.0
+      for node in self.model[i+1]:  # 다음 레이어에 대해
+        error += (node['weights'][j]*node['delta'])
+      errors.append(error)
+    ```
+
+    <img width="446" alt="image" src="https://user-images.githubusercontent.com/57972338/115364770-b5469900-a1fe-11eb-8fcb-a8dec23f8d4d.png">
+
+    - `sigma` 에 해당한다.
+
+  - 각 레이어에서 구한 오차 `error`는
+    ```python
+    for j in range(len(layer)):
+      node = layer[j]
+      node['delta'] = errors[j] * self.activation_func_grad(node['output'])
+    ```
+    - 위와 같이 노드에 `delta`를 key값으로 하여 저장한다.
+      > 각 레이어마다 자신의 노드값을 곱하지 않고 저장한 이유는 그 이외에 다른 층에서 델타값을 사용하기 때문에 사용 용이성을 높이기 위해 제외하였다. 자신의 노드값을 곱하는 것은 `update`함수에서 진행된다.
 
 - 가중치 갱신 함수
 
@@ -234,6 +264,8 @@ class MultiLayerPerceptron:
                node['weights'][-1] += lr * \
                    node['delta']  # bias의 노드는 항상 1임
   ```
+
+  - 위 역전파 코드에서 곱해야할 노드를 생략하였는데, 위 코드에서 가중치를 갱신할 때 곱하여 갱신합니다.
 
 - 학습 함수
 
@@ -275,3 +307,7 @@ class MultiLayerPerceptron:
   ```
 
   - 각 `dataset`을 가지고 순전파를통해 예측값을 저장하고 label과의 차이를 가지고 역전파하여 가중치값을 **갱신**한다.
+
+## 결론
+
+<!-- TODO: 작성해야함 -->
