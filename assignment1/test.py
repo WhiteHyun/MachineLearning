@@ -17,14 +17,40 @@ def predict(model, dataset=None):
     labels = []
     for train_set in model.dataset:
         output = model.feed_foward(train_set)
-        outputs.append(
-            list(map(lambda x: 1 if x > 0.95 else 0 if x < 0.05 else x, output)))
+        outputs.append(output)
         # one hot vector로 구성
         label = [0 for _ in range(
             len(set(map(lambda x: x[-1], model.dataset))))]
         label[train_set[-1]] = 1
         labels.append(label)
     return (outputs, labels)
+
+
+def print_result(outputs, labels):
+    """예측값과 레이블을 가지고 나온 결과를 정리하여 출력합니다
+
+    Parameters
+    ----------
+    outputs : list
+        - 예측값(hypothesis)
+
+    labels : list
+        - 정답(label)
+    """
+    hypothesis = list(map(list, list(map(lambda x: 1 if x > 0.95 else 0 if x <
+                                         0.05 else x, output) for output in outputs)))
+    print(f"""======================================predict======================================
+{hypothesis}
+===================================================================================
+
+    """)
+    print(f"""=======================================label=======================================
+{labels}
+===================================================================================
+
+    """)
+    print(
+        f"accuracy: {sum([1 for x in zip(outputs, labels) if x[0] == x[1]])/len(model.dataset)*100}%")
 
 
 if __name__ == "__main__":
@@ -48,11 +74,8 @@ if __name__ == "__main__":
     model = MultiLayerPerceptron(
         len_input_nodes, len_hidden_nodes, len_output_nodes, dataset, epochs)
 
-    model.train(verbose=False)  # epochs: 5000, 출력: False
+    model.train(verbose=False)  # 출력: False
 
-    outputs, labels = predict(model)
+    outputs, labels = predict(model)  # dataset이 같기 때문에 추가적인 파라미터 입력 X
 
-    print(f"predict: \n{outputs}")
-    print(f"label: \n{labels}")
-    print(
-        f"accuracy: {sum([1 for x in zip(outputs, labels) if x[0] == x[1]])/len(model.dataset)}")
+    print_result(outputs, labels)
