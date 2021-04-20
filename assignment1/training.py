@@ -85,7 +85,7 @@ class MultiLayerPerceptron:
         """weight update 함수
         """
         for i in range(len(self.model)):
-            inputs = train_set[:-1] if i != 0 else [node['output']
+            inputs = train_set[:-1] if i == 0 else [node['output']
                                                     for node in self.model[i-1]]
             for node in self.model[i]:
                 for j in range(len(inputs)):
@@ -136,4 +136,4 @@ if __name__ == "__main__":
                [4.095084253434162, 7.69104329159447, 1]]
 
     network = MultiLayerPerceptron(2, 2, 2, dataset)
-    network.train(2000)
+    network.train(100000, verbose=True)
