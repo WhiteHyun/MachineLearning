@@ -43,10 +43,12 @@ if __name__ == "__main__":
     len_hidden_nodes = 2
     len_output_nodes = len(set(map(lambda x: x[-1], dataset)))
 
-    model = MultiLayerPerceptron(
-        len_input_nodes, len_hidden_nodes, len_output_nodes, dataset)
+    epochs = int(input("epochs: "))
 
-    model.train(epochs=5000, verbose=False)  # epochs: 5000, 출력: False
+    model = MultiLayerPerceptron(
+        len_input_nodes, len_hidden_nodes, len_output_nodes, dataset, epochs)
+
+    model.train(verbose=False)  # epochs: 5000, 출력: False
 
     outputs, labels = predict(model)
 

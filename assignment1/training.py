@@ -11,7 +11,7 @@ def randn(size):
 
 
 class MultiLayerPerceptron:
-    def __init__(self, ni, nh, no, dataset) -> None:
+    def __init__(self, ni, nh, no, dataset, epochs=5000) -> None:
         """퍼셉트론 네트워크 초기화
         """
         self.model = []
@@ -24,6 +24,7 @@ class MultiLayerPerceptron:
         self.model.append(hidden_layer)
         self.model.append(output_layer)
         self.dataset = dataset
+        self.epochs = epochs
 
     def weight_sum(self, weights, inputs):
         """각각의 가중치계산 후 결과값을 리턴합니다.
@@ -98,18 +99,17 @@ class MultiLayerPerceptron:
                 node['weights'][-1] += lr * \
                     node['delta']  # bias의 노드는 항상 1임
 
-    def train(self, epochs, lr=0.5, verbose=False):
+    def train(self, lr=0.5, verbose=False):
         """주어진 dataset을 가지고 학습합니다.
 
         Parameters
         ----------
 
-        epochs : int
         lr : float
         verbose : bool
             epoch과 에러율을 보여줍니다.
         """
-        for epoch in range(epochs):
+        for epoch in range(self.epochs):
             for train_set in self.dataset:
                 # forward
                 outputs = self.feed_foward(train_set)
@@ -147,6 +147,8 @@ if __name__ == "__main__":
     len_input_nodes = len(dataset[0])-1
     len_hidden_nodes = 2
     len_output_nodes = len(set(map(lambda x: x[-1], dataset)))
+
+    epochs = int(input("epochs: "))
     network = MultiLayerPerceptron(
-        len_input_nodes, len_hidden_nodes, len_output_nodes, dataset)
-    network.train(epochs=5000, verbose=True)
+        len_input_nodes, len_hidden_nodes, len_output_nodes, dataset, epochs)
+    network.train(verbose=True)
