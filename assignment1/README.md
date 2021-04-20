@@ -311,13 +311,16 @@ class MultiLayerPerceptron:
 ## 결론
 
 1. 데이터셋을 가지고 한 `Epoch`를 500번 정도 학습시키고 난 결과, 에러율이 눈에 띄게 사라지는 것을 볼 수 있다.
-   <img width="249" alt="image" src="https://user-images.githubusercontent.com/57972338/115369190-d3ae9380-a202-11eb-829a-445703ae10f1.png">
+
+  <img width="249" alt="image" src="https://user-images.githubusercontent.com/57972338/115369190-d3ae9380-a202-11eb-829a-445703ae10f1.png">
 
 2. 학습시킨 가중치를 가지고 테스트를 해보았을 때 높은 정확도를 보였다.
-   <img width="694" alt="image" src="https://user-images.githubusercontent.com/57972338/115369552-32740d00-a203-11eb-907d-b2d2fb2d3d25.png">
+
+  <img width="694" alt="image" src="https://user-images.githubusercontent.com/57972338/115369552-32740d00-a203-11eb-907d-b2d2fb2d3d25.png">
 
 - 위 결과값은 활성함수로 `sigmoid`를 사용했다.  
   활성함수를 `ReLU`로 바꿔 실험을 하면 다음과 같은 결과값이 나온다.
+
   <img width="229" alt="image" src="https://user-images.githubusercontent.com/57972338/115378985-11fc8080-a20c-11eb-9f86-dd2d4b0ef326.png">
 
   <img width="690" alt="image" src="https://user-images.githubusercontent.com/57972338/115379030-1aed5200-a20c-11eb-8092-1c8e322067e8.png">
