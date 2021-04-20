@@ -328,6 +328,7 @@ class MultiLayerPerceptron:
 ### ReLU를 사용하면 에러율이 높아지는 이유
 
 - ReLU의 그래프는 다음과 같다.
+
   <img width="236" alt="image" src="https://user-images.githubusercontent.com/57972338/115386111-f4cbb000-a213-11eb-892a-bf29157dc8ee.png">
 
 - `zsum`이나 `osum`의 값이 0 이하가 되는 경우 활성함수를 적용하게 되면 무조건 0이 나오게 되고 그 외에는 자신의 값이 나오게 된다. ReLU를 미분할 시 `0: (x<0)`, `1: (x>1)`로 단순화된다.
