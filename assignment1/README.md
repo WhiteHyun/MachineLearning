@@ -179,6 +179,11 @@ class MultiLayerPerceptron:
        return inputs
   ```
 
+  - `dataset`을 input으로 하여 각 layer들의 가중치를 곱하고 활성함수를 적용하여 출력값을 얻는다.
+  - 각 노드들은 순전파할 때 가중치합을 활성함수로 적용시킨 output값을 저장해놓는다.
+  - 최종적으로 해당 모델에 대한 최종 output을 리턴한다.
+    - 이 때 각 노드들은 output에 대한 값들을 다 저장해놓고있다.
+
 - 역전파 함수
 
   ```python
@@ -206,6 +211,12 @@ class MultiLayerPerceptron:
                node['delta'] = errors[j] * \
                    self.activation_func_grad(node['output'])
   ```
+
+  - 각 노드들은 자신의 `output`을 가지고 있기 때문에 인자를 받지 않고 label만 인자로 받음
+  - 출력층인 경우
+    https://github.com/WhiteHyun/MachineLearning/blob/e48b966ee35cc71a61d42cd9b3ca68a87cb06aed/assignment1/training.py#L71-L74
+    <img width="306" alt="image" src="https://user-images.githubusercontent.com/57972338/115361398-83800300-a1fb-11eb-9b53-37720cd8f147.png">
+    `label[j] - node['output']`은 `-(y-o)`에 해당한다.
 
 - 가중치 갱신 함수
 
@@ -262,3 +273,5 @@ class MultiLayerPerceptron:
            if verbose and epoch % 100 == 0:
                print(f"epoch: {epoch}, error: {error:.3f}")
   ```
+
+  - 각 `dataset`을 가지고 순전파를통해 예측값을 저장하고 label과의 차이를 가지고 역전파하여 가중치값을 **갱신**한다.
