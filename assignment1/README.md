@@ -80,6 +80,7 @@ class MultiLayerPerceptron:
 - output_layer: 출력층
 - 각 layer은 [node](#node)를 `리스트` 형태로 가지고 있다.
 - 형태
+
   <img width="811" alt="image" src="https://user-images.githubusercontent.com/57972338/115352368-3b101780-a1f2-11eb-8309-0dc06de1b611.png">
 
 #### node
@@ -89,6 +90,7 @@ class MultiLayerPerceptron:
 - 각 자신에게 들어오는 가중치를 리스트로 가지고 있음
 
   - 형태
+
     <img width="636" alt="image" src="https://user-images.githubusercontent.com/57972338/115351558-575f8480-a1f1-11eb-80e3-e6ede5d09714.png">
 
     ```python
@@ -99,6 +101,7 @@ class MultiLayerPerceptron:
 - 각 가중치합을 활성함수로 적용시킨 노드는 `output`을 키값으로 하여 값을 저장함
 
   - 형태
+  
     <img width="655" alt="image" src="https://user-images.githubusercontent.com/57972338/115351763-8d9d0400-a1f1-11eb-939f-df663dee2e25.png">
 
     ```python
@@ -108,6 +111,7 @@ class MultiLayerPerceptron:
 
 - `backward`를 통해 델타값을 구한 것을 각 노드마다 갖고 있어야 하므로 `delta`를 키값으로 하여 저장
   - 형태
+  
     <img width="803" alt="image" src="https://user-images.githubusercontent.com/57972338/115352118-f1273180-a1f1-11eb-9386-a0dc3bb7c4c5.png">
     ```python
     node["delta"]
@@ -310,7 +314,7 @@ class MultiLayerPerceptron:
 
 ## 결론
 
-1. 데이터셋을 가지고 한 `Epoch`를 500번 정도 학습시키고 난 결과, 에러율이 눈에 띄게 사라지는 것을 볼 수 있다.
+1. 데이터셋을 가지고 한 `Epoch`를 5000번 정도 학습시키고 난 결과, 에러율이 눈에 띄게 사라지는 것을 볼 수 있다.
 
   <img width="249" alt="image" src="https://user-images.githubusercontent.com/57972338/115369190-d3ae9380-a202-11eb-829a-445703ae10f1.png">
 
