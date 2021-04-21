@@ -113,6 +113,7 @@ class MultiLayerPerceptron:
   - 형태
   
     <img width="803" alt="image" src="https://user-images.githubusercontent.com/57972338/115352118-f1273180-a1f1-11eb-9386-a0dc3bb7c4c5.png">
+    
     ```python
     node["delta"]
     >>> 0.0013421
