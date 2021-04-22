@@ -110,6 +110,7 @@ class MultiLayerPerceptron:
             epoch과 에러율을 보여줍니다.
         """
         for epoch in range(self.epochs):
+            error = 0.0
             for train_set in self.dataset:
                 # forward
                 outputs = self.feed_foward(train_set)
@@ -119,8 +120,8 @@ class MultiLayerPerceptron:
                 label[train_set[-1]] = 1
 
                 # 표기할 오차
-                error = sum((label[i]-outputs[i]) **
-                            2 for i in range(len(label)))
+                error += sum((label[i]-outputs[i]) **
+                             2 for i in range(len(label)))
 
                 # backward
                 self.backward(label)
