@@ -129,8 +129,8 @@ class MultiLayerPerceptron:
                 # update
                 self.update(train_set, lr)
 
-            if verbose and epoch % 500 == 0:
-                print(f"epoch: {epoch}, error: {error:.3f}")
+            if verbose and epoch % 100 == 0:
+                print(f"epoch: {epoch}, error: {error/len(self.dataset):.3f}")
 
 
 if __name__ == "__main__":

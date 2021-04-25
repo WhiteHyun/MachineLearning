@@ -50,7 +50,7 @@ def print_result(outputs, labels):
 
     """)
     print(
-        f"accuracy: {sum([1 for x in zip(outputs, labels) if x[0] == x[1]])/len(model.dataset)*100}%")
+        f"accuracy: {sum([1 for x in zip(hypothesis, labels) if x[0] == x[1]])/len(model.dataset)*100}%")
 
 
 if __name__ == "__main__":
