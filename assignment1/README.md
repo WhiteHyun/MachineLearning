@@ -13,7 +13,8 @@
 - Loss function: `MSE`
 - Training dataset = Test
 - 활성함수: `sigmoid`
-  - $S(x)$ = $ 1 \over {1+e^{-x}}$ = $ e^x \over {e^x+1}$
+  - ![](https://cdn.discordapp.com/attachments/857992927875694643/861493917571350528/224913075164282880.png)
+<!--  - $S(x)$ = $ 1 \over {1+e^{-x}}$ = $ e^x \over {e^x+1}$ -->
 
 ## 파일 제출
 
